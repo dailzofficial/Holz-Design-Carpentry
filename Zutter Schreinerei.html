@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="de" id="html-root">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Holz & Design – Schreinerei & Innenausbau. Massarbeit in Holz mit höchster Schweizer Qualität." />
+<title>Holz & Design – Schreinerei & Innenausbau</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23b5895a'/%3E%3Ctext x='16' y='22' font-family='Inter,sans-serif' font-size='18' font-weight='900' text-anchor='middle' fill='white'%3EH%26D%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1a1a1a;
+    --paper: #f9f9f9;
+    --oak: #b5895a;
+    --oak-dark: #8a6b42;
+    --oak-light: #d4b08a;
+    --gray-1: #f4f4f2;
+    --gray-2: #e8e7e3;
+    --gray-3: #c8c7c2;
+    --gray-4: #7a7975;
+    --gray-5: #4a4946;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Preloader */
+  #preloader {
+    position: fixed; inset: 0; z-index: 99999;
+    background: var(--paper);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+  #preloader.hidden { opacity: 0; visibility: hidden; }
+  .preloader-logo {
+    font-family: 'Inter', sans-serif; font-size: 28px; font-weight: 900;
+    letter-spacing: 0.1em; color: var(--ink); text-transform: uppercase;
+  }
+  .preloader-logo span { color: var(--oak); }
+  .preloader-bar-wrap {
+    width: 120px; height: 2px; background: var(--gray-2); border-radius: 2px; overflow: hidden;
+  }
+  .preloader-bar {
+    height: 100%; background: var(--oak); border-radius: 2px;
+    animation: preloaderFill 0.4s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  @keyframes preloaderFill {
+    0% { width: 0%; } 100% { width: 100%; }
+  }
+
+  /* About section */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; padding: 80px 0;
+  }
+  .about-img-wrap { position: relative; border-radius: 4px; overflow: hidden; aspect-ratio: 4/3; }
+  .about-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .about-accent {
+    position: absolute; bottom: -24px; right: -24px;
+    width: 140px; height: 140px;
+    background: var(--oak); opacity: 0.12; border-radius: 4px;
+  }
+  .about-tag {
+    position: absolute; top: 24px; left: 24px;
+    background: var(--oak); color: white;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 2px;
+  }
+  .about-body { display: flex; flex-direction: column; gap: 24px; }
+  .about-name { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
+  .about-role { font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--oak); }
+  .about-text { font-size: 16px; color: var(--gray-4); line-height: 1.75; }
+  .about-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .about-pill {
+    padding: 6px 16px; border: 1px solid var(--gray-2);
+    font-size: 12px; font-weight: 500; border-radius: 100px; color: var(--gray-5);
+  }
+  @media (max-width: 768px) {
+    .about-grid { grid-template-columns: 1fr; gap: 40px; padding: 40px 0; }
+    .about-accent { display: none; }
+  }
+
+  /* Reveal animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* Header */
+  .header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    transition: background 0.3s, box-shadow 0.3s;
+    height: 72px;
+  }
+  .header.scrolled {
+    background: rgba(249,249,249,0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.08);
+  }
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+  }
+  .logo {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    color: var(--ink);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  .logo span { color: var(--oak); }
+  nav { display: flex; align-items: center; gap: 36px; }
+  nav a {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gray-4);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  nav a:hover { color: var(--ink); }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--oak);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--oak-dark); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-outline {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: transparent;
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-outline:hover { background: var(--ink); color: white; }
+
+  /* Language switcher */
+  .lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: 8px;
+  }
+  .lang-btn {
+    background: none;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--gray-4);
+    cursor: pointer;
+    padding: 5px 7px;
+    transition: color 0.2s, background 0.2s;
+    border-radius: 2px;
+    line-height: 1;
+  }
+  .lang-btn:hover { color: var(--ink); }
+  .lang-btn.active { color: var(--oak); background: rgba(181,137,90,0.1); }
+  .lang-sep { color: var(--gray-3); font-size: 10px; }
+
+  /* Mobile menu */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+    background: none;
+    border: none;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--ink);
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 72px; left: 0; right: 0; bottom: 0;
+    background: var(--paper);
+    z-index: 99;
+    flex-direction: column;
+    padding: 48px 40px;
+    gap: 32px;
+  }
+  .mobile-nav.open { display: flex; }
+  .mobile-nav a {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 72px;
+  }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--oak);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--oak);
+  }
+  .hero-title {
+    font-size: clamp(40px, 4.5vw, 72px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  .hero-title em { font-style: normal; color: var(--oak); }
+  .hero-subtitle {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--gray-4);
+    margin-bottom: 48px;
+    max-width: 480px;
+  }
+  .hero-cta { display: flex; gap: 16px; align-items: center; }
+  .hero-stat {
+    margin-top: 80px;
+    padding-top: 40px;
+    border-top: 1px solid var(--gray-2);
+    display: flex;
+    gap: 48px;
+  }
+  .stat-num {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat-num span { color: var(--oak); font-size: 24px; }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-4);
+    margin-top: 6px;
+  }
+  .hero-right { position: relative; overflow: hidden; }
+  .hero-right-inner { position: absolute; inset: 0; }
+  .hero-badge {
+    position: absolute;
+    bottom: 48px;
+    left: -24px;
+    background: white;
+    padding: 24px 28px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    min-width: 220px;
+  }
+  .hero-badge-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray-4);
+    margin-bottom: 8px;
+  }
+  .hero-badge-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Sections */
+  .section { padding: 120px 0; }
+  .section-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 80px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--oak);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--oak);
+  }
+  .section-title {
+    font-size: clamp(28px, 3vw, 48px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+
+  /* Values */
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 64px;
+    background: var(--gray-2);
+  }
+  .value-card {
+    background: var(--paper);
+    padding: 56px 48px;
+    transition: background 0.2s;
+  }
+  .value-card:hover { background: var(--gray-1); }
+  .value-icon {
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--gray-1);
+    margin-bottom: 32px;
+  }
+  .value-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .value-desc { font-size: 15px; line-height: 1.7; color: var(--gray-4); }
+
+  /* Marquee strip */
+  .strip {
+    background: var(--oak);
+    padding: 20px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .strip-inner {
+    display: flex;
+    gap: 64px;
+    animation: marquee 20s linear infinite;
+  }
+  .strip-item {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .strip-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.5); }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* Services */
+  .services-section { background: var(--ink); }
+  .services-section .section-label { color: var(--oak-light); }
+  .services-section .section-label::before { background: var(--oak-light); }
+  .services-section .section-title { color: var(--paper); }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 64px;
+  }
+  .service-card {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    cursor: pointer;
+  }
+  .service-card-img { position: absolute; inset: 0; }
+  .service-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 32px 28px;
+    transition: background 0.3s;
+  }
+  .service-card:hover .service-card-overlay {
+    background: linear-gradient(to top, rgba(181,137,90,0.9) 0%, rgba(181,137,90,0.4) 60%, transparent 100%);
+  }
+  .service-card-num {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+  }
+  .service-card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+  .service-card-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    transform: translateY(8px);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .service-card:hover .service-card-desc { transform: translateY(0); opacity: 1; }
+
+  /* Portfolio */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(2, 320px);
+    gap: 8px;
+    margin-top: 64px;
+  }
+  .portfolio-item { overflow: hidden; position: relative; }
+  .portfolio-item-1 { grid-column: 1 / 6; grid-row: 1; }
+  .portfolio-item-2 { grid-column: 6 / 9; grid-row: 1; }
+  .portfolio-item-3 { grid-column: 9 / 13; grid-row: 1; }
+  .portfolio-item-4 { grid-column: 1 / 4; grid-row: 2; }
+  .portfolio-item-5 { grid-column: 4 / 9; grid-row: 2; }
+  .portfolio-item-6 { grid-column: 9 / 13; grid-row: 2; }
+  .portfolio-item-img {
+    position: absolute; inset: 0;
+    transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .portfolio-item:hover .portfolio-item-img { transform: scale(1.05); }
+  .portfolio-item-label {
+    position: absolute;
+    bottom: 16px; left: 20px;
+    background: white;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 6px 12px;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .portfolio-item:hover .portfolio-item-label { opacity: 1; transform: translateY(0); }
+
+  /* Contact */
+  .contact-section { background: var(--gray-1); }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 96px;
+    margin-top: 64px;
+    align-items: start;
+  }
+  .contact-info-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 24px;
+    line-height: 1.2;
+  }
+  .contact-info-body {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--gray-4);
+    margin-bottom: 40px;
+  }
+  .contact-detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 0;
+    border-top: 1px solid var(--gray-2);
+  }
+  .contact-detail:last-child { border-bottom: 1px solid var(--gray-2); }
+  .contact-detail-icon {
+    width: 40px; height: 40px;
+    background: var(--oak);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .contact-detail-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray-4);
+    margin-bottom: 4px;
+  }
+  .contact-detail-value { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .contact-detail-value a { color: var(--oak); text-decoration: none; }
+  .contact-detail-value a:hover { text-decoration: underline; }
+
+  /* Form */
+  .form-group { margin-bottom: 24px; }
+  .form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-5);
+    margin-bottom: 10px;
+  }
+  .form-input {
+    width: 100%;
+    background: white;
+    border: 1.5px solid var(--gray-2);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+  .form-input:focus {
+    border-color: var(--oak);
+    box-shadow: 0 0 0 3px rgba(181,137,90,0.12);
+  }
+  .form-input::placeholder { color: var(--gray-3); }
+  textarea.form-input { resize: vertical; min-height: 120px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* Footer */
+  .footer { background: #111; color: #999; padding: 80px 0 40px; }
+  .footer-inner { max-width: 1280px; margin: 0 auto; padding: 0 80px; }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: 64px;
+    padding-bottom: 64px;
+    border-bottom: 1px solid #2a2a2a;
+    margin-bottom: 40px;
+  }
+  .footer-logo {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #f9f9f9;
+    margin-bottom: 20px;
+  }
+  .footer-logo span { color: var(--oak); }
+  .footer-desc { font-size: 14px; line-height: 1.7; color: #666; max-width: 280px; }
+  .footer-col-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 24px;
+  }
+  .footer-link {
+    display: block;
+    font-size: 14px;
+    color: #777;
+    text-decoration: none;
+    margin-bottom: 12px;
+    transition: color 0.2s;
+  }
+  .footer-link:hover { color: white; }
+  .footer-map {
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: #1d1d1d;
+    position: relative;
+    overflow: hidden;
+  }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #444;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+  }
+  .lightbox.open { opacity: 1; pointer-events: auto; }
+  .lightbox-img {
+    max-width: 90vw; max-height: 90vh; object-fit: contain;
+    transform: scale(0.95); transition: transform 0.3s ease;
+  }
+  .lightbox.open .lightbox-img { transform: scale(1); }
+  .lightbox-close {
+    position: absolute; top: 24px; right: 24px;
+    background: none; border: none; color: white; cursor: pointer;
+    padding: 8px; display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s;
+  }
+  .lightbox-close:hover { transform: scale(1.1); }
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: rgba(0,0,0,0.5); border: none; color: white; cursor: pointer;
+    padding: 16px; display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, transform 0.2s; border-radius: 50%;
+  }
+  .lightbox-nav:hover { background: rgba(0,0,0,0.8); transform: translateY(-50%) scale(1.05); }
+  .lightbox-prev { left: 24px; }
+  .lightbox-next { right: 24px; }
+  .clickable-img { cursor: pointer; }
+  
+  .lightbox-info {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 40px 80px 60px; text-align: center; color: white;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 60%, transparent 100%);
+    pointer-events: none;
+  }
+  .lightbox-info-title { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .lightbox-info-desc { font-size: 15px; color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+  .lightbox-counter {
+    position: absolute; top: 24px; left: 50%; transform: translateX(-50%);
+    background: rgba(0,0,0,0.5); color: white;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
+    padding: 6px 16px; border-radius: 100px; backdrop-filter: blur(4px);
+  }
+
+  @keyframes lightboxEnter {
+    0% { opacity: 0; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes lightboxInfoEnter {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .lightbox-anim { animation: lightboxEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .lightbox-info-anim { animation: lightboxInfoEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 80px 40px 60px; }
+    .hero-right { height: 60vw; position: relative; }
+    .hero-right-inner { position: absolute; inset: 0; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+  }
+  @media (max-width: 768px) {
+    .section-inner, .footer-inner, .hero-left { padding-left: 24px; padding-right: 24px; }
+    nav, .header-inner .btn-primary { display: none; }
+    .hamburger { display: flex; }
+    .values-grid { grid-template-columns: 1fr; }
+    .portfolio-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .portfolio-item-1, .portfolio-item-2, .portfolio-item-3,
+    .portfolio-item-4, .portfolio-item-5, .portfolio-item-6 { grid-column: auto; grid-row: auto; aspect-ratio: 1; }
+    .services-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+    .hero-stat { gap: 28px; }
+    
+    /* Lightbox Mobile */
+    .lightbox-nav { padding: 8px; }
+    .lightbox-prev { left: 8px; }
+    .lightbox-next { right: 8px; }
+    .lightbox-close { top: 12px; right: 12px; padding: 4px; }
+    .lightbox-img { max-width: 100vw; max-height: 85vh; }
+    .lightbox-info { padding: 24px 20px 40px; }
+    .lightbox-info-title { font-size: 18px; }
+    .lightbox-info-desc { font-size: 13px; }
+    
+    /* Make hover texts always visible on mobile */
+    .service-card-desc { opacity: 1; transform: translateY(0); }
+    .portfolio-item-label { opacity: 1; transform: translateY(0); }
+  }
+  @media (max-width: 480px) {
+    .portfolio-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef, useContext, createContext } = React;
+
+// ── TRANSLATIONS ──────────────────────────────────────────────────────────────
+const LANGS = ['DE', 'FR', 'EN'];
+const T = {
+  DE: {
+    brand: { main: 'Holz & Design', sub: 'Schreinerei' },
+    about: {
+      label: 'Über uns', name: '[Dein Name]', role: 'Schreinermeister & Inhaber',
+      tag: 'Seit 2004',
+      text: 'Mit über 20 Jahren Erfahrung stehe ich persönlich hinter jedem Projekt. Was als kleines Atelier begann, ist heute ein etablierter Betrieb — mit demselben Anspruch: höchste Qualität, von Hand gefertigt.',
+      pills: ['Küchenbau', 'Parkett', 'Renovationen', 'Möbel nach Mass'],
+      imgAlt: 'Werkstatt Impression',
+    },
+    nav: { services: 'Leistungen', projects: 'Projekte', contact: 'Kontakt', cta: 'Offerte anfragen' },
+    hero: {
+      eyebrow: 'Schreinerei & Innenausbau',
+      title1: 'Handwerkliche', titleEm: 'Präzision', title2: 'aus der Region',
+      subtitle: 'Individueller Innenausbau und Schreinerei für Ihr Zuhause — gefertigt mit Schweizer Sorgfalt und jahrzehntelanger Erfahrung.',
+      cta: 'Offerte anfragen', cta2: 'Unsere Arbeiten',
+      statLabel1: 'Jahre Erfahrung', statLabel2: 'Projekte', statLabel3: 'Massarbeit',
+      badgeLabel: 'Standort',
+    },
+    values: {
+      label: 'Unsere Werte', title: 'Warum wir?',
+      cards: [
+        { title: 'Schweizer Qualität', desc: 'Nur die besten Materialien, verarbeitet nach höchsten Schweizer Standards. Jedes Detail zählt — von der ersten Skizze bis zur finalen Montage.' },
+        { title: 'Massarbeit', desc: 'Kein Projekt gleicht dem anderen. Wir fertigen jedes Stück individuell nach Ihren Wünschen — präzise auf den Millimeter genau.' },
+        { title: 'Zuverlässigkeit', desc: 'Termine werden eingehalten, Versprechen gehalten. Sie wissen jederzeit, wo Ihr Projekt steht — transparent und pünktlich.' },
+      ],
+    },
+    strip: ['Küchen nach Mass','Parkett & Böden','Schreinerarbeiten','Innenausbau','Zuverlässig','Schweizer Qualität'],
+    services: {
+      label: 'Leistungen', title: 'Was wir für Sie schaffen',
+      items: [
+        { num:'01', title:'Küchen nach Mass', desc:'Individuell geplante Küchen, die perfekt in Ihren Raum passen — funktional und ästhetisch.' },
+        { num:'02', title:'Holzböden', desc:'Parkettböden und Massivholzdielen in allen Holzarten, verlegt und veredelt mit Schweizer Präzision.' },
+        { num:'03', title:'Renovationen', desc:'Komplette Innenrenovationen — von Böden bis zur Decke, alles aus einer Hand.' },
+        { num:'04', title:'Unikatmöbel', desc:'Schränke, Regale, Betten, Tische — gefertigt als Einzelstück für Sie und Ihr Zuhause.' },
+      ],
+    },
+    portfolio: {
+      label: 'Portfolio', title: 'Ausgewählte Projekte', allProjects: 'Alle Projekte',
+      items: ['Küche — Worblaufen','Einbauschrank','Parkett','Kinderzimmer','Wohnzimmer','Badmöbel'],
+    },
+    contact: {
+      label: 'Kontakt', title: 'Ihr Projekt beginnt hier',
+      infoTitle: 'Kein Hotmail mehr —\nnur echte Professionalität.',
+      infoBody: 'Als etabliertes Schreinereibetrieb in Ihrer Region stehen wir für höchste Qualität auch in der Kommunikation. Schreiben Sie uns direkt — wir antworten innert 24 Stunden.',
+      detailLabels: ['E-Mail','Telefon','Adresse','Öffnungszeiten'],
+      email: 'deinname@beispiel.ch',
+      phone: '+41 00 000 00 00',
+      hours: 'Mo–Fr, 08:00 – 17:00',
+      address: 'Beispielstrasse 123, 0000 Stadt',
+      formName: 'Name', formPhone: 'Telefon', formEmail: 'E-Mail', formProject: 'Projektart',
+      formMsg: 'Ihre Nachricht', formSubmit: 'Offerte anfragen',
+      formPlaceName: 'Max Muster', formPlaceEmail: 'max@muster.ch', formPlaceMsg: 'Beschreiben Sie Ihr Projekt kurz…',
+      formChoose: 'Bitte wählen…', formPrivacy: 'Ihre Daten werden vertraulich behandelt und nicht an Dritte weitergegeben.',
+      formSuccess: '✓ Vielen Dank! Wir melden uns innert 24 Stunden bei Ihnen.',
+      projectTypes: ['Küche','Schrank/Möbel','Boden','Renovation','Anderes'],
+    },
+    footer: {
+      desc: 'Holz & Design Schreinerei — Ihr Spezialist für Massarbeit in Holz. Seit über 20 Jahren in Ihrer Region.',
+      navTitle: 'Navigation', contactTitle: 'Kontakt', locationTitle: 'Standort',
+      links: ['Leistungen','Projekte','Kontakt','Offerte'],
+      copy: '© 2025 Holz & Design Schreinerei. Alle Rechte vorbehalten.',
+      city: 'Stadt, Schweiz',
+    },
+  },
+  FR: {
+    brand: { main: 'Holz & Design', sub: 'Menuiserie' },
+    about: {
+      label: 'À propos', name: '[Ton Nom]', role: 'Maître menuisier & propriétaire',
+      tag: 'Depuis 2004',
+      text: "Avec plus de 20 ans d'expérience, je m'implique personnellement dans chaque projet. Ce qui a commencé comme un petit atelier est aujourd'hui une entreprise établie — avec la même exigence : qualité maximale, fabriquée à la main.",
+      pills: ['Cuisines', 'Parquets', 'Rénovations', 'Meubles sur mesure'],
+      imgAlt: "Impression de l'atelier",
+    },
+    nav: { services: 'Services', projects: 'Projets', contact: 'Contact', cta: 'Demander un devis' },
+    hero: {
+      eyebrow: 'Menuiserie & Agencement intérieur',
+      title1: 'Précision', titleEm: 'artisanale', title2: 'dans votre région',
+      subtitle: "Agencement intérieur sur mesure et menuiserie pour votre maison — fabriqués avec le soin suisse et des décennies d'expérience.",
+      cta: 'Demander un devis', cta2: 'Nos réalisations',
+      statLabel1: "Ans d'expérience", statLabel2: 'Projets', statLabel3: 'Sur mesure',
+      badgeLabel: 'Localisation',
+    },
+    values: {
+      label: 'Nos valeurs', title: 'Pourquoi nous?',
+      cards: [
+        { title: 'Qualité suisse', desc: 'Uniquement les meilleurs matériaux, travaillés selon les plus hauts standards suisses. Chaque détail compte — du premier croquis au montage final.' },
+        { title: 'Sur mesure', desc: 'Aucun projet ne ressemble à un autre. Nous fabriquons chaque pièce individuellement selon vos souhaits — précis au millimètre.' },
+        { title: 'Fiabilité', desc: 'Les délais sont respectés, les promesses tenues. Vous savez à tout moment où en est votre projet — transparent et ponctuel.' },
+      ],
+    },
+    strip: ['Cuisines sur mesure','Parquets & Sols','Menuiserie','Agencement intérieur','Fiable','Qualité suisse'],
+    services: {
+      label: 'Services', title: 'Ce que nous créons pour vous',
+      items: [
+        { num:'01', title:'Cuisines sur mesure', desc:"Cuisines planifiées individuellement, qui s'intègrent parfaitement dans votre espace — fonctionnelles et esthétiques." },
+        { num:'02', title:'Parquets en bois', desc:'Parquets et planchers en bois massif dans toutes les essences, posés et finis avec la précision suisse.' },
+        { num:'03', title:'Rénovations', desc:'Rénovations intérieures complètes — du sol au plafond, tout en une seule main.' },
+        { num:'04', title:'Meubles uniques', desc:'Armoires, étagères, lits, tables — fabriqués en pièce unique pour vous et votre maison.' },
+      ],
+    },
+    portfolio: {
+      label: 'Portfolio', title: 'Projets sélectionnés', allProjects: 'Tous les projets',
+      items: ['Cuisine — Worblaufen','Armoire encastrée','Parquet',"Chambre d'enfant",'Salon','Mobilier de salle de bain'],
+    },
+    contact: {
+      label: 'Contact', title: 'Votre projet commence ici',
+      infoTitle: 'Plus de Hotmail —\nuniquement du professionnalisme.',
+      infoBody: "En tant qu'entreprise de menuiserie établie dans votre région, nous représentons la plus haute qualité, y compris dans la communication. Écrivez-nous directement — nous répondons dans les 24 heures.",
+      detailLabels: ["E-mail",'Téléphone','Adresse',"Heures d'ouverture"],
+      email: 'tonnom@exemple.ch',
+      phone: '+33 00 000 00 00',
+      hours: 'Lun–Ven, 08:00 – 17:00',
+      address: 'Rue de l\'Exemple 123, 0000 Ville',
+      formName: 'Nom', formPhone: 'Téléphone', formEmail: 'E-mail', formProject: 'Type de projet',
+      formMsg: 'Votre message', formSubmit: 'Demander un devis',
+      formPlaceName: 'Jean Dupont', formPlaceEmail: 'jean@exemple.ch', formPlaceMsg: 'Décrivez brièvement votre projet…',
+      formChoose: 'Veuillez choisir…', formPrivacy: 'Vos données sont traitées de manière confidentielle et ne sont pas transmises à des tiers.',
+      formSuccess: '✓ Merci! Nous vous contacterons dans les 24 heures.',
+      projectTypes: ['Cuisine','Armoire/Meuble','Sol','Rénovation','Autre'],
+    },
+    footer: {
+      desc: 'Holz & Design Menuiserie — Votre spécialiste du bois sur mesure. Depuis plus de 20 ans dans votre región.',
+      navTitle: 'Navigation', contactTitle: 'Contact', locationTitle: 'Localisation',
+      links: ['Services','Projets','Contact','Devis'],
+      copy: '© 2025 Holz & Design Menuiserie. Tous droits réservés.',
+      city: 'Ville, Suisse',
+    },
+  },
+  EN: {
+    brand: { main: 'Holz & Design', sub: 'Carpentry' },
+    about: {
+      label: 'About us', name: '[Your Name]', role: 'Master Carpenter & Owner',
+      tag: 'Since 2004',
+      text: 'With over 20 years of experience, I am personally involved in every project. What started as a small workshop is now an established business — with the same commitment: the highest quality, crafted by hand.',
+      pills: ['Kitchens', 'Flooring', 'Renovations', 'Custom furniture'],
+      imgAlt: 'Workshop impression',
+    },
+    nav: { services: 'Services', projects: 'Projects', contact: 'Contact', cta: 'Request a quote' },
+    hero: {
+      eyebrow: 'Carpentry & Interior Finishing',
+      title1: 'Artisan', titleEm: 'Precision', title2: 'in your region',
+      subtitle: 'Custom interior finishing and carpentry for your home — crafted with Swiss care and decades of experience.',
+      cta: 'Request a quote', cta2: 'Our work',
+      statLabel1: 'Years of experience', statLabel2: 'Projects', statLabel3: 'Custom-made',
+      badgeLabel: 'Location',
+    },
+    values: {
+      label: 'Our values', title: 'Why us?',
+      cards: [
+        { title: 'Swiss quality', desc: 'Only the finest materials, processed to the highest Swiss standards. Every detail matters — from the first sketch to the final installation.' },
+        { title: 'Custom-made', desc: 'No two projects are alike. We craft every piece individually to your wishes — precise to the millimetre.' },
+        { title: 'Reliability', desc: 'Deadlines are met, promises kept. You always know where your project stands — transparent and on time.' },
+      ],
+    },
+    strip: ['Custom kitchens','Parquet & Floors','Carpentry work','Interior finishing','Reliable','Swiss quality'],
+    services: {
+      label: 'Services', title: 'What we create for you',
+      items: [
+        { num:'01', title:'Custom kitchens', desc:'Individually planned kitchens that fit your space perfectly — functional and aesthetic.' },
+        { num:'02', title:'Hardwood floors', desc:'Parquet and solid wood floors in all wood species, laid and finished with Swiss precision.' },
+        { num:'03', title:'Renovations', desc:'Complete interior renovations — from floor to ceiling, everything from one source.' },
+        { num:'04', title:'One-of-a-kind furniture', desc:'Wardrobes, shelves, beds, tables — crafted as unique pieces for you and your home.' },
+      ],
+    },
+    portfolio: {
+      label: 'Portfolio', title: 'Selected projects', allProjects: 'All projects',
+      items: ['Kitchen — Worblaufen','Built-in wardrobe','Parquet floor',"Children's room",'Living room','Bathroom furniture'],
+    },
+    contact: {
+      label: 'Contact', title: 'Your project starts here',
+      infoTitle: 'No more Hotmail —\njust real professionalism.',
+      infoBody: 'As an established carpentry firm in your region, we stand for the highest quality in communication too. Write to us directly — we respond within 24 hours.',
+      detailLabels: ['Email','Phone','Address','Opening hours'],
+      email: 'yourname@example.ch',
+      phone: '+44 00 000 00 00',
+      hours: 'Mon–Fri, 08:00 – 17:00',
+      address: 'Example Street 123, 0000 City',
+      formName: 'Name', formPhone: 'Phone', formEmail: 'Email', formProject: 'Project type',
+      formMsg: 'Your message', formSubmit: 'Request a quote',
+      formPlaceName: 'John Smith', formPlaceEmail: 'john@example.ch', formPlaceMsg: 'Briefly describe your project…',
+      formChoose: 'Please select…', formPrivacy: 'Your data is treated confidentially and not shared with third parties.',
+      formSuccess: "✓ Thank you! We'll be in touch within 24 hours.",
+      projectTypes: ['Kitchen','Wardrobe/Furniture','Flooring','Renovation','Other'],
+    },
+    footer: {
+      desc: 'Holz & Design Carpentry — Your specialist for custom woodwork. Over 20 years in your region.',
+      navTitle: 'Navigation', contactTitle: 'Contact', locationTitle: 'Location',
+      links: ['Services','Projects','Contact','Quote'],
+      copy: '© 2025 Holz & Design Carpentry. All rights reserved.',
+      city: 'City, Switzerland',
+    },
+  },
+};
+
+// ── CONTEXT ───────────────────────────────────────────────────────────────────
+const LangContext = createContext({ lang: 'DE', t: T.DE, setLang: () => {} });
+const LightboxContext = createContext({ lightboxData: null, setLightboxData: () => {} });
+
+// ── ICONS ─────────────────────────────────────────────────────────────────────
+const IconClose = ({size=24,color='currentColor'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+);
+const IconChevronLeft = ({size=24,color='currentColor'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>
+);
+const IconChevronRight = ({size=24,color='currentColor'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="9 18 15 12 9 6"/>
+  </svg>
+);
+const IconShield = ({size=22,color='currentColor'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+  </svg>
+);
+const IconRuler = ({size=22,color='currentColor'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/>
+    <path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/>
+  </svg>
+);
+const IconClock = ({size=22,color='currentColor'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+  </svg>
+);
+const IconArrowRight = ({size=16,color='currentColor'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+  </svg>
+);
+const IconMapPin = ({size=16,color='currentColor'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+  </svg>
+);
+const IconMail = ({size=18,color='currentColor'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+  </svg>
+);
+const IconPhone = ({size=18,color='currentColor'}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </svg>
+);
+
+// ── HOOKS ─────────────────────────────────────────────────────────────────────
+function useReveal() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { el.classList.add('visible'); obs.disconnect(); }
+    }, { threshold: 0.1 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return ref;
+}
+
+// ── HOOKS (counter) ───────────────────────────────────────────────────────────
+function useCounter(target, duration = 1500) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const started = useRef(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started.current) {
+        started.current = true;
+        const start = performance.now();
+        const tick = (now) => {
+          const p = Math.min((now - start) / duration, 1);
+          const ease = 1 - Math.pow(1 - p, 3);
+          setCount(Math.round(target * ease));
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+        obs.disconnect();
+      }
+    }, { threshold: 0.3 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [target, duration]);
+  return [count, ref];
+}
+
+// ── COMPONENTS ────────────────────────────────────────────────────────────────
+function Photo({ src, className, style, alt = '' }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      className={className || ''}
+      style={{ objectFit: 'cover', width: '100%', height: '100%', display: 'block', ...style }}
+    />
+  );
+}
+
+function Lightbox() {
+  const { lightboxData, setLightboxData } = useContext(LightboxContext);
+  const isOpen = !!lightboxData;
+  const images = lightboxData?.images || [];
+  const currentIndex = lightboxData?.index || 0;
+  const touchStartX = useRef(null);
+
+  const handleClose = () => setLightboxData(null);
+  const handlePrev = (e) => { if (e?.stopPropagation) e.stopPropagation(); setLightboxData({ images, index: (currentIndex - 1 + images.length) % images.length }); };
+  const handleNext = (e) => { if (e?.stopPropagation) e.stopPropagation(); setLightboxData({ images, index: (currentIndex + 1) % images.length }); };
+
+  const onTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { diff > 0 ? handleNext() : handlePrev(); }
+    touchStartX.current = null;
+  };
+
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (!isOpen) return;
+      if (e.key === 'Escape') handleClose();
+      if (e.key === 'ArrowLeft' && images.length > 1) handlePrev(e);
+      if (e.key === 'ArrowRight' && images.length > 1) handleNext(e);
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [isOpen, images, currentIndex]);
+
+  return (
+    <div className={`lightbox ${isOpen ? 'open' : ''}`} onClick={handleClose}
+      onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      {isOpen && (
+        <>
+          <img key={`img-${currentIndex}`} src={images[currentIndex]?.src || images[currentIndex]} className="lightbox-img lightbox-anim" alt="Vista ampliada" onClick={e => e.stopPropagation()} />
+          {images.length > 1 && (
+            <div className="lightbox-counter" onClick={e => e.stopPropagation()}>{currentIndex + 1} / {images.length}</div>
+          )}
+          {(images[currentIndex]?.title || images[currentIndex]?.desc) && (
+            <div key={`info-${currentIndex}`} className="lightbox-info lightbox-info-anim">
+              {images[currentIndex].title && <div className="lightbox-info-title">{images[currentIndex].title}</div>}
+              {images[currentIndex].desc && <div className="lightbox-info-desc">{images[currentIndex].desc}</div>}
+            </div>
+          )}
+          {images.length > 1 && (
+            <>
+              <button className="lightbox-nav lightbox-prev" onClick={handlePrev}><IconChevronLeft size={32}/></button>
+              <button className="lightbox-nav lightbox-next" onClick={handleNext}><IconChevronRight size={32}/></button>
+            </>
+          )}
+          <button className="lightbox-close" onClick={handleClose} aria-label="Cerrar">
+            <IconClose size={32} />
+          </button>
+        </>
+      )}
+    </div>
+  );
+}
+
+function LangSwitcher() {
+  const { lang, setLang } = useContext(LangContext);
+  return (
+    <div className="lang-switcher">
+      {LANGS.map((l, i) => (
+        <React.Fragment key={l}>
+          {i > 0 && <span className="lang-sep">·</span>}
+          <button className={`lang-btn${lang === l ? ' active' : ''}`} onClick={() => setLang(l)}>{l}</button>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+}
+
+function Header() {
+  const { t } = useContext(LangContext);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  return (
+    <>
+      <header className={`header${scrolled ? ' scrolled' : ''}`}>
+        <div className="header-inner">
+          <a href="#" className="logo">{t.brand.main} <span>{t.brand.sub}</span></a>
+          <nav>
+            <a href="#leistungen">{t.nav.services}</a>
+            <a href="#projekte">{t.nav.projects}</a>
+            <a href="#kontakt">{t.nav.contact}</a>
+          </nav>
+          <div style={{display:'flex',alignItems:'center',gap:8}}>
+            <LangSwitcher/>
+            <a href="#kontakt" className="btn-primary" style={{fontSize:'12px',padding:'10px 20px'}}>
+              {t.nav.cta}
+            </a>
+          </div>
+          <button className="hamburger" onClick={() => setMobileOpen(v => !v)} aria-label="Menu">
+            {mobileOpen
+              ? <><span style={{transform:'rotate(45deg) translate(5px,5px)'}}/><span style={{opacity:0}}/><span style={{transform:'rotate(-45deg) translate(5px,-5px)'}}/></>
+              : <><span/><span/><span/></>
+            }
+          </button>
+        </div>
+      </header>
+      <div className={`mobile-nav${mobileOpen ? ' open' : ''}`}>
+        <a href="#leistungen" onClick={() => setMobileOpen(false)}>{t.nav.services}</a>
+        <a href="#projekte" onClick={() => setMobileOpen(false)}>{t.nav.projects}</a>
+        <a href="#kontakt" onClick={() => setMobileOpen(false)}>{t.nav.contact}</a>
+        <LangSwitcher/>
+        <a href="#kontakt" className="btn-primary" onClick={() => setMobileOpen(false)} style={{alignSelf:'flex-start',marginTop:'auto'}}>
+          {t.nav.cta}
+        </a>
+      </div>
+    </>
+  );
+}
+
+function StatCounter({ target, suffix, label }) {
+  const [count, ref] = useCounter(target);
+  return (
+    <div className="stat-item" ref={ref}>
+      <div className="stat-num">{count}<span>{suffix}</span></div>
+      <div className="stat-label">{label}</div>
+    </div>
+  );
+}
+
+function Hero() {
+  const { t } = useContext(LangContext);
+  const { setLightboxData } = useContext(LightboxContext);
+  const ref1 = useReveal(), ref2 = useReveal(), ref3 = useReveal();
+  return (
+    <section className="hero">
+      <div className="hero-left">
+        <div ref={ref1} className="reveal">
+          <div className="hero-eyebrow">{t.hero.eyebrow}</div>
+          <h1 className="hero-title">
+            {t.hero.title1}<br/><em>{t.hero.titleEm}</em><br/>{t.hero.title2}
+          </h1>
+          <p className="hero-subtitle">{t.hero.subtitle}</p>
+          <div className="hero-cta">
+            <a href="#kontakt" className="btn-primary">{t.hero.cta} <IconArrowRight size={16}/></a>
+            <a href="#projekte" className="btn-outline">{t.hero.cta2}</a>
+          </div>
+        </div>
+        <div ref={ref2} className="reveal reveal-delay-2 hero-stat">
+          <StatCounter target={20} suffix="+" label={t.hero.statLabel1} />
+          <StatCounter target={400} suffix="+" label={t.hero.statLabel2} />
+          <StatCounter target={100} suffix="%" label={t.hero.statLabel3} />
+        </div>
+      </div>
+      <div className="hero-right">
+        <div className="hero-right-inner">
+          <div className="clickable-img" style={{position:'absolute',inset:0}} onClick={() => setLightboxData({images: [{src: 'img/hero.jpg'}], index: 0})}>
+            <Photo
+              src="img/hero.jpg"
+              style={{position:'absolute',inset:0}}
+              alt="Carpintería artesanal"
+            />
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(135deg,rgba(26,26,26,0.4) 0%,transparent 60%)'}}>
+              <div style={{position:'absolute',top:'50%',left:'50%',transform:'translate(-50%,-50%)',color:'rgba(255,255,255,0.08)',fontFamily:'Inter',fontWeight:900,fontSize:'clamp(80px,12vw,180px)',letterSpacing:'-0.05em',userSelect:'none',whiteSpace:'nowrap'}}>HOLZ</div>
+            </div>
+          </div>
+          <div ref={ref3} className="reveal reveal-delay-3 hero-badge">
+            <div className="hero-badge-label">{t.hero.badgeLabel}</div>
+            <div className="hero-badge-value">
+              <IconMapPin size={16} color="var(--oak)"/> {t.footer.city}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Values() {
+  const { t } = useContext(LangContext);
+  const titleRef = useReveal();
+  const c1 = useReveal(), c2 = useReveal(), c3 = useReveal();
+  const icons = [
+    <IconShield size={22} color="var(--oak)"/>,
+    <IconRuler size={22} color="var(--oak)"/>,
+    <IconClock size={22} color="var(--oak)"/>,
+  ];
+  const cardRefs = [c1, c2, c3];
+  return (
+    <section className="section">
+      <div className="section-inner">
+        <div ref={titleRef} className="reveal">
+          <div className="section-label">{t.values.label}</div>
+          <h2 className="section-title">{t.values.title}</h2>
+        </div>
+        <div className="values-grid">
+          {t.values.cards.map((c, i) => (
+            <div key={i} ref={cardRefs[i]} className={`reveal reveal-delay-${i+1} value-card`}>
+              <div className="value-icon">{icons[i]}</div>
+              <div className="value-title">{c.title}</div>
+              <p className="value-desc">{c.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Strip() {
+  const { t } = useContext(LangContext);
+  const items = [...t.strip, ...t.strip];
+  return (
+    <div className="strip">
+      <div className="strip-inner">
+        {items.map((item, i) => (
+          <div key={i} className="strip-item">
+            <span className="strip-dot"/>
+            {item}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Services() {
+  const { t } = useContext(LangContext);
+  const { setLightboxData } = useContext(LightboxContext);
+  const titleRef = useReveal();
+  const serviceImgs = [
+    'img/service-1.jpg',
+    'img/service-2.jpg',
+    'img/service-3.jpg',
+    'img/service-4.jpg',
+  ];
+  return (
+    <section className="section services-section" id="leistungen">
+      <div className="section-inner">
+        <div ref={titleRef} className="reveal">
+          <div className="section-label">{t.services.label}</div>
+          <h2 className="section-title">{t.services.title}</h2>
+        </div>
+        <div className="services-grid">
+          {t.services.items.map((s, i) => (
+            <div key={i} className="service-card clickable-img" onClick={() => setLightboxData({images: t.services.items.map((item, idx) => ({src: serviceImgs[idx], title: item.title, desc: item.desc})), index: i})}>
+              <Photo src={serviceImgs[i]} className="service-card-img" alt={s.title}/>
+              <div className="service-card-overlay">
+                <div className="service-card-num">{s.num}</div>
+                <div className="service-card-title">{s.title}</div>
+                <div className="service-card-desc">{s.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Portfolio() {
+  const { t } = useContext(LangContext);
+  const { setLightboxData } = useContext(LightboxContext);
+  const titleRef = useReveal();
+  const portfolioImgs = [
+    'img/project-1.jpg',
+    'img/project-2.jpg',
+    'img/project-3.jpg',
+    'img/project-4.jpg',
+    'img/project-5.jpg',
+    'img/project-6.jpg',
+  ];
+  return (
+    <section className="section" id="projekte" style={{paddingBottom:80}}>
+      <div className="section-inner">
+        <div ref={titleRef} className="reveal" style={{display:'flex',justifyContent:'space-between',alignItems:'flex-end',flexWrap:'wrap',gap:24}}>
+          <div>
+            <div className="section-label">{t.portfolio.label}</div>
+            <h2 className="section-title">{t.portfolio.title}</h2>
+          </div>
+          <a href="#kontakt" className="btn-outline" style={{whiteSpace:'nowrap'}}>
+            {t.portfolio.allProjects} <IconArrowRight size={14}/>
+          </a>
+        </div>
+        <div className="portfolio-grid">
+          {t.portfolio.items.map((label, i) => (
+            <div key={i} className={`portfolio-item portfolio-item-${i+1} clickable-img`} onClick={() => setLightboxData({images: t.portfolio.items.map((lbl, idx) => ({src: portfolioImgs[idx], title: lbl})), index: i})}>
+              <Photo src={portfolioImgs[i]} className="portfolio-item-img" alt={label}/>
+              <div className="portfolio-item-label">{label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function About() {
+  const { t } = useContext(LangContext);
+  const imgRef = useReveal(), bodyRef = useReveal();
+  return (
+    <section className="section" id="about" style={{background:'var(--gray-1)'}}>
+      <div className="section-inner">
+        <div className="about-grid">
+          <div ref={imgRef} className="reveal about-img-wrap">
+            <img src="img/about.jpg" alt={t.about.imgAlt} loading="lazy" />
+            <div className="about-tag">{t.about.tag}</div>
+            <div className="about-accent"/>
+          </div>
+          <div ref={bodyRef} className="reveal reveal-delay-2 about-body">
+            <div>
+              <div className="section-label">{t.about.label}</div>
+              <div className="about-name">{t.about.name}</div>
+              <div className="about-role">{t.about.role}</div>
+            </div>
+            <p className="about-text">{t.about.text}</p>
+            <div className="about-pills">
+              {t.about.pills.map((p, i) => <span key={i} className="about-pill">{p}</span>)}
+            </div>
+            <a href="#kontakt" className="btn-primary" style={{alignSelf:'flex-start'}}>{t.nav.cta} <IconArrowRight size={14}/></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Contact() {
+  const { t } = useContext(LangContext);
+  const titleRef = useReveal();
+  const [form, setForm] = useState({ name: '', email: '', phone: '', project: '', message: '' });
+  const [sent, setSent] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const detailIcons = [
+    <IconMail size={18} color="white"/>,
+    <IconPhone size={18} color="white"/>,
+    <IconMapPin size={18} color="white"/>,
+    <IconClock size={18} color="white"/>,
+  ];
+  const detailValues = [
+    <a href={`mailto:${t.contact.email}`}>{t.contact.email}</a>,
+    t.contact.phone,
+    t.contact.address,
+    t.contact.hours,
+  ];
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim()) e.name = true;
+    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email)) e.email = true;
+    if (!form.message.trim()) e.message = true;
+    return e;
+  };
+
+  const handleSubmit = (ev) => {
+    ev.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setErrors({});
+    setSent(true);
+    setForm({ name: '', email: '', phone: '', project: '', message: '' });
+  };
+
+  const infoLines = t.contact.infoTitle.split('\n');
+
+  return (
+    <section className="section contact-section" id="kontakt">
+      <div className="section-inner">
+        <div ref={titleRef} className="reveal">
+          <div className="section-label">{t.contact.label}</div>
+          <h2 className="section-title">{t.contact.title}</h2>
+        </div>
+        <div className="contact-grid">
+          <div>
+            <h3 className="contact-info-title">{infoLines[0]}<br/>{infoLines[1]}</h3>
+            <p className="contact-info-body">{t.contact.infoBody}</p>
+            {t.contact.detailLabels.map((label, i) => (
+              <div key={i} className="contact-detail">
+                <div className="contact-detail-icon">{detailIcons[i]}</div>
+                <div>
+                  <div className="contact-detail-label">{label}</div>
+                  <div className="contact-detail-value">{detailValues[i]}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <form onSubmit={handleSubmit} noValidate>
+            {sent && (
+              <div style={{background:'rgba(181,137,90,0.1)',borderLeft:'3px solid var(--oak)',padding:'20px 24px',fontSize:'14px',color:'var(--oak-dark)',fontWeight:500,marginBottom:24}}>
+                {t.contact.formSuccess}
+              </div>
+            )}
+            <div className="form-row">
+              <div className="form-group">
+                <label className="form-label">{t.contact.formName} *</label>
+                <input type="text" className="form-input" placeholder={t.contact.formPlaceName}
+                  value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))}
+                  style={errors.name ? {borderColor:'#c0392b'} : {}}/>
+              </div>
+              <div className="form-group">
+                <label className="form-label">{t.contact.formPhone}</label>
+                <input type="tel" className="form-input" placeholder="+41 79 xxx xx xx"
+                  value={form.phone} onChange={e => setForm(f => ({...f, phone: e.target.value}))}/>
+              </div>
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.contact.formEmail} *</label>
+              <input type="email" className="form-input" placeholder={t.contact.formPlaceEmail}
+                value={form.email} onChange={e => setForm(f => ({...f, email: e.target.value}))}
+                style={errors.email ? {borderColor:'#c0392b'} : {}}/>
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.contact.formProject}</label>
+              <select className="form-input" value={form.project}
+                onChange={e => setForm(f => ({...f, project: e.target.value}))}>
+                <option value="">{t.contact.formChoose}</option>
+                {t.contact.projectTypes.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t.contact.formMsg} *</label>
+              <textarea className="form-input" placeholder={t.contact.formPlaceMsg}
+                value={form.message} onChange={e => setForm(f => ({...f, message: e.target.value}))}
+                style={errors.message ? {borderColor:'#c0392b'} : {}}/>
+            </div>
+            <button type="submit" className="btn-primary" style={{width:'100%',justifyContent:'center',padding:'16px'}}>
+              {t.contact.formSubmit} <IconArrowRight size={16}/>
+            </button>
+            <p style={{fontSize:'12px',color:'var(--gray-4)',marginTop:16,lineHeight:1.6}}>
+              {t.contact.formPrivacy}
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Footer() {
+  const { t } = useContext(LangContext);
+  const hrefs = ['#leistungen','#projekte','#kontakt','#kontakt'];
+  return (
+    <footer className="footer">
+      <div className="footer-inner">
+        <div className="footer-grid">
+          <div>
+            <div className="footer-logo">{t.brand.main} <span>{t.brand.sub}</span></div>
+            <p className="footer-desc">{t.footer.desc}</p>
+          </div>
+          <div>
+            <div className="footer-col-title">{t.footer.navTitle}</div>
+            {t.footer.links.map((l, i) => (
+              <a key={i} href={hrefs[i]} className="footer-link">{l}</a>
+            ))}
+          </div>
+          <div>
+            <div className="footer-col-title">{t.footer.contactTitle}</div>
+            <a href={`mailto:${t.contact.email}`} className="footer-link" style={{color:'var(--oak)'}}>{t.contact.email}</a>
+            <a href={`tel:${t.contact.phone}`} className="footer-link">{t.contact.phone}</a>
+            <span className="footer-link" style={{cursor:'default'}}>{t.contact.address}</span>
+            <span className="footer-link" style={{cursor:'default'}}>{t.footer.city}</span>
+          </div>
+          <div>
+            <div className="footer-col-title">{t.footer.locationTitle}</div>
+            <div className="footer-map">
+              <iframe
+                title="Bremgarten bei Bern"
+                src="https://maps.google.com/maps?q=Bern,+Switzerland&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                width="100%" height="100%"
+                style={{border:0,position:'absolute',inset:0,filter:'grayscale(0.8) contrast(1.1)'}}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>{t.footer.copy}</span>
+          <span>{t.footer.city}</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function Preloader() {
+  const [hidden, setHidden] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setHidden(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+  return (
+    <div id="preloader" className={hidden ? 'hidden' : ''}>
+      <div className="preloader-logo">Holz <span>&</span> Design</div>
+      <div className="preloader-bar-wrap"><div className="preloader-bar"/></div>
+    </div>
+  );
+}
+
+const LANG_CODES = { DE: 'de', FR: 'fr', EN: 'en' };
+
+function App() {
+  const [lang, setLang] = useState('DE');
+  const [lightboxData, setLightboxData] = useState(null);
+  const t = T[lang];
+
+  useEffect(() => {
+    document.getElementById('html-root').setAttribute('lang', LANG_CODES[lang]);
+    document.title = `${t.brand.main} ${t.brand.sub} – ${t.hero.eyebrow}`;
+  }, [lang]);
+
+  return (
+    <LangContext.Provider value={{ lang, t, setLang }}>
+      <LightboxContext.Provider value={{ lightboxData, setLightboxData }}>
+        <Header/>
+        <main>
+          <Hero/>
+          <Values/>
+          <About/>
+          <Strip/>
+          <Services/>
+          <Portfolio/>
+          <Contact/>
+        </main>
+        <Footer/>
+        <Lightbox />
+      </LightboxContext.Provider>
+    </LangContext.Provider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.Fragment>
+    <Preloader/>
+    <App/>
+  </React.Fragment>
+);
+</script>
+</body>
+</html>
